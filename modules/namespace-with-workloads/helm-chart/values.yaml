@@ -1,0 +1,4 @@
+dockerconfig: # Dockerconfig is rendered by external-secrets operator, not Helm
+  auths:
+    artifactory.sdlc.ctl.gcp.db.com:
+      auth: "{{ .auth | base64encode | toString }}"

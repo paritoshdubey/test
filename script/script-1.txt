@@ -1,0 +1,46 @@
+#!/bin/bash
+gcloud auth activate-service-account --key-file=cred.json
+gcloud config set project ${PROJECT_ID}
+gcloud compute ssh --project=${PROJECT_ID} --zone=${ZONE} ${VM_NAME}
+instance_metadata=(attributes cpu-platform description image)
+
+usage() {
+    echo -e "\nUsage: $0 [-attributes] [-cpu-platform] [-description] [-image] [-h|--help]\n"
+    echo -e "\t -attributes:      -   instance attribute"
+    echo -e "\t -description:     -   instance description"
+    echo -e "\t -image:           -   instance image"
+    echo -e "\t -h, --help:       -   display options"
+
+    exit 2
+}
+
+if [[ $# > 0 ]]; then
+    case $1 in        
+        attributes)
+            echo -e "Below is instance attribute...\n"
+            metadata_key="attributes"            
+            echo $metadata_key : $(curl "http://metadata.google.internal/computeMetadata/v1/instance/$metadata_key" -H "Metadata-Flavor: Google")
+        ;;
+        cpu-platform)
+            echo -e "Below is instance cpu-platform...\n"
+            metadata_key="cpu-platform"
+            echo $metadata_key : $(curl "http://metadata.google.internal/computeMetadata/v1/instance/$metadata_key" -H "Metadata-Flavor: Google")
+        ;;
+        description)
+            echo -e "Below is instance description...\n"
+            metadata_key="description"
+            echo $metadata_key : $(curl "http://metadata.google.internal/computeMetadata/v1/instance/$metadata_key" -H "Metadata-Flavor: Google")
+        ;;
+        cpu-platform)
+            echo -e "Below is instance image...\n"
+            metadata_key="cpu-platform"
+            echo $metadata_key : $(curl "http://metadata.google.internal/computeMetadata/v1/instance/$metadata_key" -H "Metadata-Flavor: Google")
+        ;;
+        -h|--help)
+            usage
+        ;;
+        *)
+            usage
+        ;;
+    esac
+fi
